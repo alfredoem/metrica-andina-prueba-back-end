@@ -6,6 +6,7 @@ use App\Domain\Employees\API\Employee;
 use App\Http\Controllers\Controller;
 use App\Libraries\CurrencyFormat;
 use Illuminate\Http\Request;
+use Spatie\ArrayToXml\ArrayToXml;
 
 class EmployeeController extends Controller
 {
@@ -14,8 +15,9 @@ class EmployeeController extends Controller
         $Employee = new Employee;
         $resource = $Employee->all();
         $resource = $this->filterCollection($request, $resource);
+//        $result = ArrayToXml::convert($resource);
 
-        return json_encode($resource);
+        return response()->json($resource);
     }
 
     public function find($id = '')
@@ -27,7 +29,7 @@ class EmployeeController extends Controller
             $resource = $resource->where('id', $id)->first();
         }
 
-        return json_encode($resource);
+        return response()->json($resource);
     }
 
     public function filterCollection($request, $collection)
@@ -46,11 +48,18 @@ class EmployeeController extends Controller
         } elseif(is_null($searchField) === false && is_null($searchLt) === false && is_null($searchGt) === false) {
 
             $collection = $collection->filter(function ($item) use ($searchField, $searchLt, $searchGt) {
+
                 $CurrencyFormat = new CurrencyFormat;
                 $salary = $CurrencyFormat->unformat('en_EN', $item->salary);
 
                 return ($salary >= $searchLt && $salary <= $searchGt);
+
+            })->values();
+
+            $collection = $collection->map(function (&$item, $key) {
+                return (array) $item;
             });
+
         }
 
         return $collection->all();
