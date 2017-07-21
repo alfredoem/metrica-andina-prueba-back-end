@@ -1,13 +1,6 @@
 ## Developers SAC
 
 Probado en PHP 5.6.3
-
-#### Parte 2
-
-Framework usado Laravel 5.4
-
-Ingresar al directorio `/parte-02` y ejecutar
-`composer intall`
     
 #### Parte 2
 

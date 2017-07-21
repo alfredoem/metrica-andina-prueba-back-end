@@ -14,9 +14,6 @@ Probado en PHP 5.6.3
 * Test de las clases
     + /parte-01/index.php
     
-Ingresar al directorio `/parte-02` y ejecutar
-`composer intall`
-    
 #### Parte 2
 
 Framework usado Laravel 5.4
