@@ -27,7 +27,7 @@ class EmployeeController extends Controller
         $Employee = new Employee;
         $resource = $Employee->find($id);
 
-        if (is_null($resource)) {
+        if (empty($resource)) {
             abort(404);
         }
 

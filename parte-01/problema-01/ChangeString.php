@@ -30,7 +30,3 @@ class ChangeString
         return strtr($string, array_combine($search, $replace));
     }
 }
-
-$ChangeString = new ChangeString;
-
-echo $ChangeString->build("**Casa 52");

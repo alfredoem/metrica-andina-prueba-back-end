@@ -14,6 +14,3 @@ class CompleteRange
         return range($low, $high);
     }
 }
-
-$CompleteRange = new CompleteRange;
-echo json_encode($CompleteRange->build([55, 58, 60]));

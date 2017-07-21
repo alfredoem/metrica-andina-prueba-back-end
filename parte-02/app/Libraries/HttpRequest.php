@@ -25,6 +25,10 @@ class HttpRequest
         $this->endpoint = $endpoint;
     }
 
+    /**
+     * @param array $parameters
+     * @return $this
+     */
     public function get($parameters = array())
     {
         $this->url = $this->host . '/' . $this->endpoint . '?' . http_build_query($parameters);

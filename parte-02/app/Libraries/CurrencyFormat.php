@@ -4,9 +4,14 @@ namespace App\Libraries;
 
 class CurrencyFormat
 {
-    public function unformat($locale, $value)
+    /**
+     * @param string $locale
+     * @param string $value
+     * @return mixed
+     */
+    public function unformat($locale = 'en_EN', $value = '')
     {
-        $fmt = numfmt_create( 'en_EN', \NumberFormatter::DECIMAL);
+        $fmt = numfmt_create($locale, \NumberFormatter::DECIMAL);
         $salary = substr($value, 1);
 
         return numfmt_parse($fmt, $salary);

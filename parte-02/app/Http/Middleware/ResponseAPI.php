@@ -19,7 +19,7 @@ class ResponseAPI {
         $response = $next($request);
 
         if (in_array($response->status(), [200, 201, 404, 401, 422])) {
-//            $response->header('Content-Type', 'application/json');
+            $response->header('Content-Type', 'application/json');
         }
 
         return $response;

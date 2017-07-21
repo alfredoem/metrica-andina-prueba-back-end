@@ -10,58 +10,36 @@ use Spatie\ArrayToXml\ArrayToXml;
 
 class EmployeeController extends Controller
 {
-    public function all(Request $request)
+    public function all(Request $request, $format = 'json')
     {
         $Employee = new Employee;
         $resource = $Employee->all();
-        $resource = $this->filterCollection($request, $resource);
-//        $result = ArrayToXml::convert($resource);
+        $filters = $request->all();
 
-        return response()->json($resource);
+        if (empty($filters) === false){
+            $resource = $Employee->filter($request->all(), $resource);
+        }
+
+        if ($format == 'xml') {
+            $this->response->header('Content-Type', 'application/xml');
+            $resource = ArrayToXml::convert(['employee' => $resource], 'employees');
+        } else {
+            $this->response->header('Content-Type', 'application/json');
+            $resource = json_encode($resource);
+        }
+
+        return $this->response->setContent($resource);
     }
 
     public function find($id = '')
     {
         $Employee = new Employee;
-        $resource = $Employee->all();
+        $resource = $Employee->find($id);
 
-        if (empty($id) === false) {
-            $resource = $resource->where('id', $id)->first();
+        if (empty($resource)) {
+            $this->response->setStatusCode(404);
         }
 
-        return response()->json($resource);
-    }
-
-    public function filterCollection($request, $collection)
-    {
-        $searchField = $request->search_field;
-        $searchValue = $request->search_value;
-        $searchLt = $request->search_lt;
-        $searchGt = $request->search_gt;
-
-        if (is_null($searchField) === false && is_null($searchValue) === false) {
-
-            $collection = $collection->filter(function ($item) use ($searchField, $searchValue) {
-                return false !== stristr($item->$searchField, $searchValue);
-            });
-
-        } elseif(is_null($searchField) === false && is_null($searchLt) === false && is_null($searchGt) === false) {
-
-            $collection = $collection->filter(function ($item) use ($searchField, $searchLt, $searchGt) {
-
-                $CurrencyFormat = new CurrencyFormat;
-                $salary = $CurrencyFormat->unformat('en_EN', $item->salary);
-
-                return ($salary >= $searchLt && $salary <= $searchGt);
-
-            })->values();
-
-            $collection = $collection->map(function (&$item, $key) {
-                return (array) $item;
-            });
-
-        }
-
-        return $collection->all();
+        return $this->response->setContent($resource);
     }
 }
